@@ -7,7 +7,6 @@ import hashlib
 
 #TODO
 '''
-ADD FIELD FOR ACCOUNT/WEBSITE
 CHANGE PASSWORD
 DELETE PASSWORD
 SETTINGS MODE TO CHANGE ENCRYPTION ALGORITHM(?)
@@ -69,8 +68,36 @@ while True:
 #FUNCTIONS TO EITHER VIEW OR ADD PASSWORDS
 
 #VIEW A SPECIFIC PASSWORD
-def view():
-    pass
+def search():
+    search = input ("Please enter the Sitename you wish to search for: ")
+     #OPEN THE FILE IN READ ONLY MODE
+    with open (working_file, 'r') as f:
+        #LOOP THROUGH THE LINES
+        for line in f.readlines():
+            #STRIP CARRIAGE RETURNS
+            data = line.rstrip()
+            #SPLIT THE USERNAMES AND PASSWORDS BY THE PIPE
+            sitename=''
+            username=''
+            sitename_converted=''
+            sitename, username, password = data.split("|")
+            # CONVERT SEARCH AND SITENAME TO FACILITATE MATCH
+            # CONVERT SEARCH TO LOWERCASE
+            search=search.lower()
+            #print("SEARCH VALUE:  "+search+"\n")
+            #DECRYPT SITENAME
+            #print("SITENAME VALUE:  "+sitename+"\n")
+            sitename_converted = fer.decrypt(sitename.encode()).decode()
+            #CONVERT TO LOWERCASE
+            #print("SITENAME VALUE:  "+sitename_converted+"\n")
+            sitename_converted = sitename_converted.lower()
+            #SEARCH THROUGH THE LIST
+            #IF THE LINE MATCHES:
+            if search == sitename_converted:
+            #PRINT THE RESULTS
+                print("Site: ",fer.decrypt(sitename.encode()).decode(),"\nUsername: ",fer.decrypt(username.encode()).decode(),"\nPassword: ",fer.decrypt(password.encode()).decode())
+                #print("Search: ",search," -|- Sitename: ",sitename_converted,'\n')
+        print('End of the list reached.  If no results were returned, please checked the spelling of your input.')
 
 #VIEW ALL PASSWORDS
 def viewall():
@@ -81,30 +108,31 @@ def viewall():
             #STRIP CARRIAGE RETURNS
             data = line.rstrip()
             #SPLIT THE USERNAMES AND PASSWORDS BY THE PIPE
-            username, password = data.split("|")
-            print("Username: ",fer.decrypt(username.encode()).decode()," Password: ",fer.decrypt(password.encode()).decode())
-            
-       
+            sitename, username, password = data.split("|")
+            #PRINT THE RESULTS
+            print("Site: ",fer.decrypt(sitename.encode()).decode(),"\nUsername: ",fer.decrypt(username.encode()).decode(),"\nPassword: ",fer.decrypt(password.encode()).decode(),"\n")
+          
 
 #ADD A PASSWORD
 def add():
-    name = input ('Account Name:')
+    account = input ('Sitename:')
+    name = input ('Username:')
     pwd = input ('Password:')
 
     #OPEN THE FILE IN APPEND MODE
     with open (working_file, 'a') as f:
         #WRITE THE USERNAME AND ENCRYPTED PASSWORD
-        f.write (fer.encrypt(name.encode()).decode() + "|" + fer.encrypt(pwd.encode()).decode() + "\n")
+        f.write (fer.encrypt(account.encode()).decode() + "|" + fer.encrypt(name.encode()).decode() + "|" + fer.encrypt(pwd.encode()).decode() + "\n")
 
-#PROGRAM LOOP TO VIEW/VIEWALL/ADD PASSWORDS
+#LOOP TO VIEW/VIEWALL/ADD PASSWORDS
 while True:
     #ASK THE USER IF THEY WANT TO VIEW EXISTING PASSWORDS, OR ADD A NEW ONE
-    mode = input("Would you like to add a password, or view existing ones? (view, viewall, add, or press q to quit)").lower()
+    mode = input("Would you like to add a password, or view existing ones? (add, viewall, search, or press q to quit)").lower()
 
     if mode == "q":
         break
-    if mode == "view":
-        view()
+    if mode == "search":
+        search()
     elif mode == "viewall":
         viewall()
     elif mode == "add":
