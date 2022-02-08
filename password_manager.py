@@ -44,9 +44,9 @@ else:
 #NEXT WE ASK FOR THE MASTER PASSWORD
 master_pwd = input("Please enter your master password:")
 #ENCODE THE MASTER PASSWORD
-master_pwd = master_pwd.encode('utf-8') 
+master_pwd_enc = master_pwd.encode('utf-8') 
 #HASH THE MASTER PASSWORD WITH SHA512
-mpw_enc = hashlib.sha512(master_pwd).hexdigest()
+mpw_enc = hashlib.sha512(master_pwd_enc).hexdigest()
 #GET THE WORKING FILE NAME
 working_file=mpw_enc+".txt"
 
